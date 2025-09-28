@@ -1,0 +1,64 @@
+---
+title: Button
+description: The Button Component
+---
+
+The **Button** component is a versatile UI element used to trigger actions or events. 
+It supports multiple visual styles (variants), icons, loading states, and other common 
+button features to fit various use cases.
+
+## variants
+
+The Button comes with four predefined visual variants to convey different meanings or importance levels:
+
+|Variant|Description|
+|---|---|
+|`primary`| The default style for main actions|
+|`secondary`|A less prominent style for secondary actions|
+|`danger`|Indicates a destructive or dangerous action|
+|`warning`|Used for cautionary or warning actions|
+
+You can specify the variant via the `variant` prop.
+
+## props
+
+The Button component accepts the following props:
+
+| Prop | Type | Required | Default | Description |
+|---|---|---|---|---|
+|`title`|string|Yes|-|The text label displayed inside the button|
+|`leftIcon`|ReactNode|No|-|An icon or element rendered to the left of the title|
+|`rightIcon|ReactNode|No|-|An icon or element rendered to the right of the title|
+|`loading`|boolean|No|false|When true, disables the button and shows a loading spinner in place of the left icon|
+|`variant`|string|No|`"primary"`|Defines the visual style variant of the button (`primary`, `secondary`, `danger`, or `warning`)|
+
+> Note: All standard HTML button props such as `disabled`, `onClick`, etc., are also supported and passed through.
+
+## Behavior & Accessibility
+
+- when **loading** is enabled:
+  - The button is disabled automatically.
+  - A spinner replaces the left icon (if any).
+- The button supports keyboard navigation and screen readers.
+- Use appropriate variant to communicate intent clearly.
+
+## Usage Examples
+
+```jsx
+import { Button } from "entchenComponents/Button";
+
+export function ExampleButtons() {
+  return (
+    <>
+      {/* Primary Button */}
+      <Button title="Primary" />
+
+      {/* Secondary Button with Loading State */}
+      <Button variant="secondary" title="Secondary loading..." loading />
+
+      {/* Danger Variant Disabled */}
+      <Button variant="danger" title="Danger disabled" disabled />
+    </>
+  );
+}
+```

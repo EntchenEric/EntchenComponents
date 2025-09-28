@@ -1,0 +1,69 @@
+---
+title: EntchenProvider
+description: The Provider that wraps all entchenComponents to supply required CSS variables and theming.
+---
+
+# EntchenProvider
+
+The `EntchenProvider` is a context provider component that supplies essential CSS variables and theming information to all `entchenComponents`. While many components may function without it, they **will not render with the intended styles or visual consistency** unless wrapped inside an `EntchenProvider`.
+
+---
+
+## Why Use EntchenProvider?
+
+- Ensures consistent styling across all `entchenComponents`.
+- Provides theme configuration via CSS variables.
+- Simplifies global style management for your application.
+
+---
+
+## Usage
+
+It is best practice to wrap your entire application or at least the main layout with the `EntchenProvider`. This guarantees that every nested component receives the proper styling context.
+
+```jsx
+import { EntchenProvider } from "entchenComponents";
+
+function App() {
+  return (
+    <EntchenProvider
+      theme={{
+        primaryColor: "#007bff",
+        secondaryColor: "#6c757d",
+        textColor: "#ffffff",
+        textSecondaryColor: "#f8f9fa"
+      }}
+    >
+      {/* Your app components go here */}
+    </EntchenProvider>
+  );
+}
+```
+
+---
+
+## Theme Configuration
+
+The `theme` prop of `EntchenProvider` accepts an object with the following properties:
+
+| Property           | Type   | Description                                                                                 |
+|--------------------|--------|---------------------------------------------------------------------------------------------|
+| `primaryColor`     | string | The main color used for primary elements (e.g., buttons, highlights).                      |
+| `secondaryColor`   | string | The secondary color used for less prominent UI elements.                                   |
+| `textColor`        | string | The default text color displayed on top of the primary color backgrounds.                  |
+| `textSecondaryColor` | string | The text color displayed on top of secondary color backgrounds.                             |
+
+> **Important:** Ensure sufficient contrast between:
+> - `textColor` and `primaryColor`
+> - `textSecondaryColor` and `secondaryColor`
+>
+> This improves readability and accessibility.
+
+---
+
+## Best Practices
+
+- Wrap your root layout or page container with a single instance of the provider.
+- Define a coherent theme palette that aligns with your brand or design system.
+- Test color contrast using tools like [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to meet accessibility standards.
+- Avoid nesting multiple providers unless you need different themes in different parts of your app.

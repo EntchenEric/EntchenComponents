@@ -1,0 +1,98 @@
+---
+title: HeroSection
+description: A responsive hero section component with optional background image, navigation menu, and main content.
+---
+
+# HeroSection
+
+The `HeroSection` component is a full-screen header designed for landing pages or key entry points. It features an optional background image, responsive navigation menu with mobile support, a main content area with title, description, action links, and an optional main image.
+
+---
+
+## Features
+
+- Full viewport height hero section with optional background image.
+- Responsive navigation menu:
+  - Horizontal menu on medium and larger screens.
+  - Hamburger button toggles slide-in mobile menu on smaller screens.
+- Accessible mobile menu drawer with backdrop overlay.
+- Flexible content area supporting text titles/descriptions and clickable links.
+- Supports string or React components for titles and menu item labels.
+
+---
+
+## Props Overview
+
+| Prop             | Required | Description                                                                                       |
+|------------------|----------|---------------------------------------------------------------------------------------------------|
+| `title`          | Yes      | Site or brand title shown in the top-left corner; can be a string or React component.            |
+| `backgroundImage` | No       | Optional fullscreen background image (`url` and optional `alt`).                                  |
+| `menuItems`      | No       | Array of navigation items (each has a link URL and title as string or React component).           |
+| `image`          | No       | Optional main image displayed alongside the content (`url` and optional `alt`).                   |
+| `mainContent`    | Yes      | Object containing the primary heading (`title`), descriptive text (`description`), and optional action links. |
+
+---
+
+## Behavior & Accessibility
+
+- The desktop navigation displays inline links; on smaller screens it collapses into a hamburger icon.
+- Clicking the hamburger opens a side drawer containing the navigation links.
+- A semi-transparent backdrop appears behind the drawer; clicking it closes the menu.
+- Buttons have ARIA labels ("Open Menu" / "Close Menu") to aid screen reader users.
+- Titles and menu labels support both plain strings and custom React components.
+
+---
+
+## Usage Example
+
+To avoid markdown rendering issues with code blocks inside documentation, here is an example usage snippet wrapped carefully:
+
+```jsx
+import { HeroSection } from "your-component-library";
+
+const menuItems = [
+  { link: "/about", title: "About" },
+  { link: "/services", title: "Services" },
+  { link: "/contact", title: () => <strong>Contact Us</strong> },
+];
+
+const mainContent = {
+  title: "Welcome to Our Platform",
+  description:
+    "Discover amazing features that help you grow your business efficiently.",
+  links: [
+    { link: "/signup", title: "Get Started" },
+    { link: "/learn-more", title: "Learn More" },
+  ],
+};
+
+const backgroundImage = {
+  url: "/images/hero-bg.jpg",
+  alt: "Abstract colorful background",
+};
+
+const heroImage = {
+  url: "/images/hero-image.png",
+  alt: "Illustration of product usage",
+};
+
+function App() {
+  return (
+    <HeroSection
+      title="MyBrand"
+      backgroundImage={backgroundImage}
+      menuItems={menuItems}
+      image={heroImage}
+      mainContent={mainContent}
+    />
+  );
+}
+```
+
+---
+
+## Styling Notes
+
+- Background overlay applies partial opacity with blur for visual depth.
+- Mobile drawer slides in/out smoothly using CSS transitions.
+- Images use Next.js `<Image>` component optimized for performance.
