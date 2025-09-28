@@ -1,0 +1,74 @@
+---
+title: Card
+description: A versatile card component with optional icons, images, and hover elevation effect.
+---
+
+# Card
+
+The `Card` component is a flexible content container designed to display a title, description, optional icon, and optional images on the left or right. It features smooth hover elevation and shadow effects for enhanced interactivity.
+
+---
+
+## Features
+
+- Displays a prominent **title** and descriptive **text**, both accepting either strings or React components.
+- Optional **icon** displayed next to the title.
+- Supports optional **left** and/or **right images**, optimized using Next.js `<Image>` component.
+- Smooth elevation and lift effect on hover (configurable).
+- Responsive layout with image visibility hidden on small screens (`md` breakpoint).
+
+---
+
+## Props
+
+| Prop            | Type                  | Required | Default  | Description                                                                                       |
+|-----------------|-----------------------|----------|----------|---------------------------------------------------------------------------------------------------|
+| `title`         | `string \| React.FC`  | Yes      | —        | The main heading of the card; can be a string or custom React component.                          |
+| `description`   | `string \| React.FC`  | Yes      | —        | Descriptive text content below the title; supports string or React component.                     |
+| `icon`          | `React.FC`            | No       | —        | Optional icon component displayed inline before the title.                                       |
+| `elevateOnHover`| `boolean`             | No       | true     | Enables/disables shadow lift and slight upward translation when hovering over the card.           |
+| `leftImage`     | `ImageData`           | No       | —        | Optional image displayed on the left side (hidden on smaller screens). Object with `{ url, alt? }`.|
+| `rightImage`    | `ImageData`           | No       | —        | Optional image displayed on the right side (hidden on smaller screens). Object with `{ url, alt? }`.|
+
+---
+
+## Behavior & Accessibility
+
+- The card uses semantic HTML elements (`<h3>`, `<p>`) for titles and descriptions.
+- Icons are marked as decorative (`aria-hidden="true"`) to avoid distraction for assistive technologies.
+- Images use Next.js optimized `<Image>` component with fixed size (`100x100px`) and object-fit cover styling.
+- Hover elevation improves visual feedback but can be disabled via prop.
+
+---
+
+## Usage Example
+
+```jsx
+import { Card } from "entchenComponents";
+import { InfoIcon } from "./icons";
+
+const leftImg = { url: "/images/left.jpg", alt: "Left side illustration" };
+const rightImg = { url: "/images/right.jpg", alt: "Right side illustration" };
+
+function Demo() {
+  return (
+    <Card
+      title="Card Title"
+      description="This is an example description that explains more about this card's content."
+      icon={InfoIcon}
+      elevateOnHover={true}
+      leftImage={leftImg}
+      rightImage={rightImg}
+    />
+  );
+}
+```
+
+---
+
+## Styling Notes
+
+- Background color uses CSS variable `--entchen-primary`.
+- Borders use translucent variant of primary color (`--entchen-primary-200`) with partial opacity.
+- Rounded corners (`rounded-2xl`) combined with subtle shadows enhance depth perception.
+- Transition effects apply smoothly over 300ms for hover states affecting shadow and vertical position.

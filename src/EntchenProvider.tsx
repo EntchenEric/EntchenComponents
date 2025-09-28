@@ -1,6 +1,4 @@
-"use client"
-
-import { colourNameToHex, darkenRgb, hexToRgb } from '@/utils/colorUtils';
+import { colourNameToHex, darkenRgb, hexToRgb } from '../utils/colorUtils';
 import React, { createContext, useContext, ReactNode } from 'react';
 
 export interface Theme {

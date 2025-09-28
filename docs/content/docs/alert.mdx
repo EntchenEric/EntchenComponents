@@ -1,0 +1,85 @@
+---
+title: Alert
+description: A flexible alert component for displaying important messages with variant styles and optional icons.
+---
+
+# Alert
+
+The `Alert` component is used to display contextual feedback messages such as warnings, errors, success confirmations, or general information. It supports multiple visual variants, an optional icon, and flexible content including a title and description.
+
+---
+
+## Variants
+
+The alert supports four variants that change the background color, border, and text color to convey different message types:
+
+| Variant   | Description                      |
+|-----------|----------------------------------|
+| `default` | Neutral/info style (uses CSS variables for colors) |
+| `danger`  | Error or critical alerts (red tones)                 |
+| `warning` | Cautionary alerts (yellow tones)                      |
+| `success` | Positive confirmation alerts (green tones)           |
+
+---
+
+## Props
+
+| Prop        | Type                   | Required | Description                                                                                         |
+|-------------|------------------------|----------|-----------------------------------------------------------------------------------------------------|
+| `variant`   | `"default" \| "danger" \| "warning" \| "success"` | No       | Visual style variant of the alert. Defaults to `"default"`.                                        |
+| `title`     | `string \| React.FC`   | Yes      | The main headline text or component displayed prominently in the alert.                            |
+| `description` | `string \| React.FC`  | No       | Additional descriptive text or component shown below the title for more context.                   |
+| `icon`      | `React.FC`             | No       | Optional icon component displayed on the left side of the alert content.                           |
+
+---
+
+## Accessibility
+
+- The container has `role="alert"` which notifies assistive technologies of important messages.
+- Uses ARIA attributes:
+  - `aria-live="polite"` to announce changes politely without interrupting.
+  - `aria-atomic="true"` to ensure whole alert content is presented at once.
+
+---
+
+## Usage Example
+
+```jsx
+import { Alert } from "entchenComponents";
+import { WarningIcon } from "your-icon-library";
+
+function Example() {
+  return (
+    <>
+      <Alert
+        variant="danger"
+        title="Error occurred"
+        description="There was a problem processing your request."
+        icon={WarningIcon}
+      />
+
+      <Alert
+        variant="success"
+        title={() => <strong>Success!</strong>}
+        description="Your data has been saved successfully."
+      />
+
+      <Alert
+        title="Information"
+        description="This is a neutral informational message."
+      />
+    </>
+  );
+}
+```
+
+---
+
+## Styling Details
+
+- Base styles include rounded corners, padding, flex layout with space between icon and text, and subtle shadow.
+- Variant-specific Tailwind classes apply background color, border color, and text color except for default which uses CSS variables:
+  - Default uses custom properties like `--entchen-primary`, ensuring theme consistency.
+- Text styles:
+  - Title uses bold font weight with tight line height.
+  - Description uses smaller font size with reduced opacity and secondary text color variable (`--entchen-text-secondary`) for subtlety.

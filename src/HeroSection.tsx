@@ -1,8 +1,4 @@
-"use client"
-
-import Image from "next/image";
 import React, { useState } from "react";
-import Link from "next/link";
 
 export interface MenuItem {
   link: string;
@@ -40,26 +36,23 @@ export const HeroSection = ({
   return (
     <header className="relative w-full h-screen overflow-hidden">
       {backgroundImage && (
-        <Image
+        <img
           src={backgroundImage.url}
           alt={backgroundImage.alt ?? "Hero Section Background Image"}
-          fill
-          priority
-          className="object-cover -z-10"
+          className="object-cover -z-10 absolute inset-0 w-full h-full"
+          loading="eager"
         />
       )}
       <div className="absolute inset-0 bg-[var(--entchen-primary)]/50 backdrop-blur-sm -z-10" />
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center">
         <nav className="absolute top-0 left-0 right-0 p-6 max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/">
-            <span className="text-2xl font-bold tracking-widest uppercase cursor-pointer select-none text-[var(--entchen-text)]">
-              {typeof title === "string" ? title : React.createElement(title)}
-            </span>
-          </Link>
+          <a href="/" className="text-2xl font-bold tracking-widest uppercase cursor-pointer select-none text-[var(--entchen-text)]">
+            {typeof title === "string" ? title : React.createElement(title)}
+          </a>
 
           <div className="hidden md:flex space-x-6">
             {menuItems?.map((item) => (
-              <Link
+              <a
                 href={item.link}
                 key={JSON.stringify(item)}
                 className="flex items-center space-x-2 transition-transform hover:scale-110 text-[var(--entchen-text)]"
@@ -67,7 +60,7 @@ export const HeroSection = ({
                 {typeof item.title === "string"
                   ? item.title
                   : React.createElement(item.title)}
-              </Link>
+              </a>
             ))}
           </div>
 
@@ -83,6 +76,7 @@ export const HeroSection = ({
           </button>
         </nav>
 
+        {/* Overlay for menu */}
         <div
           onClick={() => setMenuOpen(false)}
           aria-hidden={!menuOpen}
@@ -92,6 +86,7 @@ export const HeroSection = ({
           }`}
         />
 
+        {/* Mobile navigation */}
         <aside
           role="dialog"
           aria-modal="true"
@@ -114,7 +109,7 @@ export const HeroSection = ({
 
           <nav className="flex flex-col mt-4 space-y-4 px-6 text-lg font-semibold select-none">
             {menuItems?.map((item) => (
-              <Link
+              <a
                 href={item.link}
                 key={JSON.stringify(item)}
                 onClick={() => setMenuOpen(false)}
@@ -127,26 +122,32 @@ export const HeroSection = ({
                 {typeof item.title === "string"
                   ? item.title
                   : React.createElement(item.title)}
-              </Link>
+              </a>
             ))}
           </nav>
         </aside>
 
+        {/* Main content area */}
         <div className="max-w-6xl w-full flex flex-col items-center md:flex-row md:items-center md:justify-center md:space-x12 mt20 md:mt0">
-          
+
          {image && (
            <div className="flex-shrink--0 mb8 md:mb0 md:w1/2 flex justify-center items-center">
-             <Image
+             {/* Standard img instead of next/image */}
+             <img
                src={image.url}
                alt={image.alt || "Hero Section Main Image"}
                width={500}
                height={500}
+               loading="lazy"
+               decoding='async'
+               // replicate classes from original for styling:
                className="
                  rounded-lg shadow2xl transition-transform transform hover-scale105"
              />
            </div>
          )}
 
+         {/* Text content */}
          <div 
            className="
              flex flex-col items-center md-items-start text-center md-text-left md:w1/2 px-auto 
@@ -169,6 +170,7 @@ export const HeroSection = ({
              {mainContent.description}
            </p>
 
+           {/* Links/buttons */}
            {mainContent.links && (
              <div 
                className="
@@ -176,15 +178,19 @@ export const HeroSection = ({
                "
              >
                {mainContent.links.map((item) => (
-                 <Link 
+                 <a 
                    href={item.link} 
                    key={JSON.stringify(item)} 
+                   onClick={() => setMenuOpen(false)}
+                   // added cursor:pointer so it behaves like button:
+                   style={{ cursor: 'pointer' }}
+                   // copied your tailwind classes:
                    className="
-                     bg-white text-black font-semibold py3 px8 rounded-full shadow-lg hover:bg-gray200 transition-colors transform hover-scale105 cursor-pointer select-none  
+                     bg-white text-black font-semibold py3 px8 rounded-full shadow-lg hover:bg-gray200 transition-colors transform hover-scale105 select-none  
                    "
                  >
                    {typeof item.title === 'string' ? item.title : React.createElement(item.title)}
-                 </Link>
+                 </a>
                ))}
              </div>  
            )}

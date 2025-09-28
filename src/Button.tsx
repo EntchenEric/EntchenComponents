@@ -4,8 +4,8 @@ export type ButtonVariant = "primary" | "secondary" | "danger" | "warning";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     title: string;
-    leftIcon?: React.FC<React.SVGProps<SVGSVGElement> | React.HTMLAttributes<HTMLSpanElement>>;
-    rightIcon?: React.FC<React.SVGProps<SVGSVGElement> | React.HTMLAttributes<HTMLSpanElement>>;
+    leftIcon?: React.FC;
+    rightIcon?: React.FC;
     loading?: boolean;
     variant?: ButtonVariant;
 }
@@ -69,8 +69,8 @@ const baseClasses = () => {
 
 export const Button: React.FC<ButtonProps> = ({
     title,
-    leftIcon: LeftIcon,
-    rightIcon: RightIcon,
+    leftIcon,
+    rightIcon,
     disabled,
     loading,
     variant = 'primary',
@@ -110,14 +110,14 @@ export const Button: React.FC<ButtonProps> = ({
                 </svg>
             )}
 
-            {!loading && LeftIcon && (
-                <LeftIcon aria-hidden='true' focusable={false} className='w-5 h-5' />
+            {!loading && leftIcon && (
+                React.createElement(leftIcon)
             )}
 
             <span>{title}</span>
 
-            {!loading && RightIcon && (
-                <RightIcon aria-hidden='true' focusable={false} className='w-5 h-5' />
+            {!loading && rightIcon && (
+                React.createElement(rightIcon)
             )}
         </button>
     );

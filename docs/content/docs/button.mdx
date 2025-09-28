@@ -1,64 +1,86 @@
 ---
 title: Button
-description: The Button Component
+description: A flexible and accessible button component with multiple variants, icons, and loading state.
 ---
 
-The **Button** component is a versatile UI element used to trigger actions or events. 
-It supports multiple visual styles (variants), icons, loading states, and other common 
-button features to fit various use cases.
+# Button
 
-## variants
+The `Button` component is a reusable UI element designed to trigger actions. It supports four visual variants, optional left and right icons, a loading state, and all standard HTML button attributes.
 
-The Button comes with four predefined visual variants to convey different meanings or importance levels:
+---
 
-|Variant|Description|
-|---|---|
-|`primary`| The default style for main actions|
-|`secondary`|A less prominent style for secondary actions|
-|`danger`|Indicates a destructive or dangerous action|
-|`warning`|Used for cautionary or warning actions|
+## Variants
 
-You can specify the variant via the `variant` prop.
+The button comes with four predefined style variants that control its color scheme and interactive states:
 
-## props
+| Variant    | Description                                    | Colors & Behavior                                                                                         |
+|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| `primary`  | Default main action style                       | Background uses `--entchen-primary`, text uses `--entchen-text`. Includes hover and disabled styles.      |
+| `secondary`| Less prominent secondary action                 | Background uses `--entchen-secondary`, text uses `--entchen-text-secondary`. Includes hover/disabled styles.|
+| `danger`   | Indicates destructive or critical actions       | Red background with white text; distinct hover and disabled states using Tailwind red classes.            |
+| `warning`  | Used for cautionary or warning messages         | Yellow background with black text; includes appropriate hover and disabled styling in yellow tones.       |
 
-The Button component accepts the following props:
+---
 
-| Prop | Type | Required | Default | Description |
-|---|---|---|---|---|
-|`title`|string|Yes|-|The text label displayed inside the button|
-|`leftIcon`|ReactNode|No|-|An icon or element rendered to the left of the title|
-|`rightIcon|ReactNode|No|-|An icon or element rendered to the right of the title|
-|`loading`|boolean|No|false|When true, disables the button and shows a loading spinner in place of the left icon|
-|`variant`|string|No|`"primary"`|Defines the visual style variant of the button (`primary`, `secondary`, `danger`, or `warning`)|
+## Props
 
-> Note: All standard HTML button props such as `disabled`, `onClick`, etc., are also supported and passed through.
+| Prop       | Type                        | Required | Default    | Description                                                                                      |
+|------------|-----------------------------|----------|------------|-------------------------------------------------------------------------------------------------|
+| `title`    | string                      | Yes      | —          | The main label text displayed inside the button.                                               |
+| `leftIcon` | React.FC                    | No       | —          | Optional icon component rendered to the left of the title (hidden when loading).                |
+| `rightIcon`| React.FC                    | No       | —          | Optional icon component rendered to the right of the title (hidden when loading).               |
+| `loading`  | boolean                     | No       | false      | When true, disables the button and shows a spinner icon instead of any other icons/text changes.|
+| `variant`  | `"primary" \|"secondary" \|"danger" \|"warning"`  | No       | `"primary"`  | Determines the visual style variant of the button.                                             |
+| Other standard HTML `<button>` props like `disabled`, `onClick`, etc., are supported via extension.|
 
-## Behavior & Accessibility
+---
 
-- when **loading** is enabled:
-  - The button is disabled automatically.
-  - A spinner replaces the left icon (if any).
-- The button supports keyboard navigation and screen readers.
-- Use appropriate variant to communicate intent clearly.
+## Accessibility
 
-## Usage Examples
+- The button disables itself automatically when either the native `disabled` prop or the custom `loading` prop is true.
+- The spinner has appropriate ARIA attributes (`role="status"`, `aria-label="loading"`) to announce loading state.
+- Uses semantic `<button>` element ensuring keyboard accessibility by default.
+
+---
+
+## Usage Example
 
 ```jsx
-import { Button } from "entchenComponents/Button";
+import { Button } from "entchenComponents";
+import { ReactComponent as DownloadIcon } from "./icons/download.svg";
 
-export function ExampleButtons() {
+function Demo() {
   return (
     <>
-      {/* Primary Button */}
-      <Button title="Primary" />
+      <Button title="Submit" onClick={() => alert("Submitted")} />
 
-      {/* Secondary Button with Loading State */}
-      <Button variant="secondary" title="Secondary loading..." loading />
+      <Button 
+        title="Download"
+        leftIcon={DownloadIcon}
+        variant="secondary"
+      />
 
-      {/* Danger Variant Disabled */}
-      <Button variant="danger" title="Danger disabled" disabled />
+      <Button 
+        title="Delete"
+        variant="danger"
+        onClick={() => alert("Deleted")}
+      />
+
+      <Button 
+        title="Warning"
+        variant="warning"
+        rightIcon={DownloadIcon}
+        loading
+      />
     </>
   );
 }
 ```
+
+---
+
+## Styling Details
+
+- Base styles include rounded corners, padding, inline-flex layout with gap between icon(s) and label.
+- Each variant applies background color, text color, focus ring color, hover effects, cursor styles, and disabled states using Tailwind CSS classes or CSS variables.
+- Loading state replaces icons/text with an animated SVG spinner using current text color for consistency.
