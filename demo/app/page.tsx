@@ -3,9 +3,9 @@ import { HeroSection } from "entchen-components/src/HeroSection"
 import {DatePicker} from "entchen-components/src/DatePicker"
 
 /**
- * Renders the demo home page showcasing Entchen components.
+ * Render the demo home page that showcases Entchen UI components.
  *
- * @returns The JSX element for the demo page containing a HeroSection (with title and description) and a Popover.
+ * @returns The JSX element for the demo page containing a HeroSection (with title and description), a Popover, and three DatePicker examples (default, "de-DE", "en-US").
  */
 export default function Home() {
   return (
