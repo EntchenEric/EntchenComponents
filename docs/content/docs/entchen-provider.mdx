@@ -1,40 +1,42 @@
 ---
 title: EntchenProvider
-description: The Provider that wraps all entchenComponents to supply required CSS variables and theming.
+description: The Provider that wraps all entchenComponents to supply a complete, auto-generated theming system via CSS variables.
 ---
 
 # EntchenProvider
 
-The `EntchenProvider` is a context provider component that supplies essential CSS variables and theming information to all `entchenComponents`. While many components may function without it, they **will not render with the intended styles or visual consistency** unless wrapped inside an `EntchenProvider`.
+The `EntchenProvider` is a critical component that injects a complete theming system into your application. It takes a small set of base colors and automatically generates a full palette of CSS variables. All `entchenComponents` rely on these variables for consistent styling.
 
 ---
 
-## Why Use EntchenProvider?
+## Key Features
 
-- Ensures consistent styling across all `entchenComponents`.
-- Provides theme configuration via CSS variables.
-- Simplifies global style management for your application.
+* **Automatic Color Scales**: Generates a 10-step shade palette for each base color, providing design flexibility.
+* **Centralized Theming**: Ensures all child `entchenComponents` share a consistent and predictable visual style.
+* **Flexible Color Formats**: Accepts standard CSS color names (e.g., "tomato") and hex codes.
+* **Theme Access**: Exports a `useTheme` hook for direct access to the theme object within components.
 
 ---
 
 ## Usage
 
-It is best practice to wrap your entire application or at least the main layout with the `EntchenProvider`. This guarantees that every nested component receives the proper styling context.
+For proper styling, you must wrap your application's root layout or component tree with a single `EntchenProvider`.
 
 ```jsx
 import { EntchenProvider } from "entchenComponents";
+import YourApp from "./YourApp";
 
 function App() {
+  const myTheme = {
+    primaryColor: "#007bff", // A bright blue
+    secondaryColor: "#6c757d", // A muted gray
+    textColor: "#ffffff", // White text for primary backgrounds
+    textSecondaryColor: "#212529" // Dark text for secondary backgrounds
+  };
+
   return (
-    <EntchenProvider
-      theme={{
-        primaryColor: "#007bff",
-        secondaryColor: "#6c757d",
-        textColor: "#ffffff",
-        textSecondaryColor: "#f8f9fa"
-      }}
-    >
-      {/* Your app components go here */}
+    <EntchenProvider theme={myTheme}>
+      <YourApp />
     </EntchenProvider>
   );
 }
@@ -44,26 +46,53 @@ function App() {
 
 ## Theme Configuration
 
-The `theme` prop of `EntchenProvider` accepts an object with the following properties:
+The `theme` prop accepts an object with four base color properties. These can be any valid CSS color name or a hex string.
 
-| Property           | Type   | Description                                                                                 |
-|--------------------|--------|---------------------------------------------------------------------------------------------|
-| `primaryColor`     | string | The main color used for primary elements (e.g., buttons, highlights).                      |
-| `secondaryColor`   | string | The secondary color used for less prominent UI elements.                                   |
-| `textColor`        | string | The default text color displayed on top of the primary color backgrounds.                  |
-| `textSecondaryColor` | string | The text color displayed on top of secondary color backgrounds.                             |
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `primaryColor` | `string` | The main color for primary actions and elements like buttons. |
+| `secondaryColor` | `string` | The secondary color for less prominent UI elements. |
+| `textColor` | `string` | The default text color for use on primary color backgrounds. |
+| `textSecondaryColor` | `string` | The text color for use on secondary color backgrounds. |
 
-> **Important:** Ensure sufficient contrast between:
-> - `textColor` and `primaryColor`
-> - `textSecondaryColor` and `secondaryColor`
->
-> This improves readability and accessibility.
+> **Accessibility Note**: Always ensure sufficient contrast between your background colors and their corresponding text colors. Tools like the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) can help verify your choices.
 
 ---
 
-## Best Practices
+## Automatic Color Scale Generation
 
-- Wrap your root layout or page container with a single instance of the provider.
-- Define a coherent theme palette that aligns with your brand or design system.
-- Test color contrast using tools like [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to meet accessibility standards.
-- Avoid nesting multiple providers unless you need different themes in different parts of your app.
+This is the core feature of the provider. From the four base colors you provide, it automatically generates and injects **40 CSS variables** into its child scope.
+
+For each base color (e.g., `primary`), it creates a 10-step scale by progressively darkening the original color. This provides a full palette for building components.
+
+For example, providing a `primaryColor` generates:
+
+* `--entchen-primary`: Your original color.
+* `--entchen-primary-100`: A slightly darker version.
+* `--entchen-primary-200`: Darker still.
+* ...
+* `--entchen-primary-900`: The darkest shade.
+
+The same process is applied to `secondary`, `text`, and `text-secondary`, giving you a rich, consistent, and predictable set of variables to work with.
+
+---
+
+## `useTheme` Hook
+
+The provider also exports a `useTheme` hook, which allows any child component to access the original theme object directly. This can be useful for custom components that need to perform logic based on the theme colors.
+
+```jsx
+import { useTheme } from "entchenComponents";
+
+function CustomComponent() {
+  // Access the raw theme object provided to EntchenProvider
+  const theme = useTheme();
+
+  const customStyle = {
+    border: `2px solid ${theme.primaryColor}`,
+    color: theme.textSecondaryColor,
+  };
+
+  return <div style={customStyle}>A custom themed component!</div>;
+}
+```
