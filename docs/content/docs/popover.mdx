@@ -54,7 +54,7 @@ To create a **controlled** `Popover`, pass the `open` and `onOpenChange` props. 
 This is the simplest way to use the `Popover`. It will manage its own state.
 
 ```jsx
-import { Popover, Button } from "entchenComponents";
+import { Popover, Button } from "entchen-components";
 
 function SimplePopover() {
   const userMenu = (
@@ -79,7 +79,7 @@ In this example, the parent component controls the `Popover`'s state. This allow
 
 ```jsx
 import React, { useState } from "react";
-import { Popover, Button } from "entchenComponents";
+import { Popover, Button } from "entchen-components";
 
 function ControlledPopover() {
   const [isOpen, setIsOpen] = useState(false);
