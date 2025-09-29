@@ -1,0 +1,74 @@
+---
+title: Popover
+description: A flexible popover component that displays content in a floating panel, triggered by a clickable element.
+---
+
+# Popover
+
+The `Popover` component is used to display additional information or actions in a floating panel that appears next to a trigger element. It's ideal for menus, extra details, or forms that shouldn't clutter the main UI.
+
+
+
+---
+
+## Features
+
+* **Custom Trigger**: Any React node can be used as the trigger element.
+* **Animated Entrance**: The popover content appears with a subtle fade-in and scale animation.
+* **Smart Dismiss**: Automatically closes when the user clicks anywhere outside of the popover.
+* **Styled Arrow**: Includes a CSS-generated arrow that points to the trigger element for a clear visual connection.
+* **Controlled Mode**: The open/closed state can be controlled externally via an `open` prop.
+
+---
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `trigger` | `ReactNode` | Yes | — | The element that the user clicks to open or close the popover. |
+| `popoverContent` | `ReactNode` | Yes | — | The content to be displayed inside the popover panel. |
+| `open` | `boolean` | No | `false` | A prop to manually control the visibility of the popover from a parent component. |
+
+---
+
+## Behavior
+
+* **Toggling**: Clicking the `trigger` element toggles the popover's visibility.
+* **Click Outside**: The component listens for clicks on the document. If a click occurs outside of the popover's container (including both the trigger and the content), the popover will close. This ensures a non-intrusive user experience.
+* **Positioning**: The popover content is positioned absolutely, directly below its trigger with a small offset.
+
+---
+
+## Usage Example
+
+Here's how to use the `Popover` with a `Button` component as its trigger.
+
+```jsx
+import { Popover, Button } from "entchenComponents";
+
+function UserProfile() {
+  const userMenu = (
+    <div>
+      <p style={{ margin: 0, fontWeight: 600 }}>Jane Doe</p>
+      <a href="/profile" style={{ display: 'block', marginTop: '8px' }}>View Profile</a>
+      <a href="/logout" style={{ display: 'block', marginTop: '4px' }}>Sign Out</a>
+    </div>
+  );
+
+  return (
+    <Popover
+      trigger={<Button title="My Account" />}
+      popoverContent={userMenu}
+    />
+  );
+}
+```
+
+---
+
+## Styling Details
+
+* **Implementation**: The `Popover` is built with **styled-components** and is themed using CSS variables from the `EntchenProvider` (e.g., `--entchen-primary`, `--entchen-text`).
+* **Content Panel**: The floating panel has a distinct style, featuring a themed background color, a subtle border, rounded corners, and a multi-layered `box-shadow` for depth.
+* **Animation**: The panel uses CSS `keyframes` for a smooth entrance animation that animates `opacity`, `transform: scale()`, and `transform: translateY()`.
+* **Indicator Arrow**: A small triangular arrow is created using the `::before` and `::after` pseudo-elements. It's positioned at the top of the content panel and uses the border trick to point back towards the trigger, visually anchoring the popover.
