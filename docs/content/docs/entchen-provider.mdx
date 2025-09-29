@@ -1,18 +1,18 @@
 ---
 title: EntchenProvider
-description: The Provider that wraps all entchenComponents to supply a complete, auto-generated theming system via CSS variables.
+description: The Provider that wraps all entchen-components to supply a complete, auto-generated theming system via CSS variables.
 ---
 
 # EntchenProvider
 
-The `EntchenProvider` is a critical component that injects a complete theming system into your application. It takes a small set of base colors and automatically generates a full palette of CSS variables. All `entchenComponents` rely on these variables for consistent styling.
+The `EntchenProvider` is a critical component that injects a complete theming system into your application. It takes a small set of base colors and automatically generates a full palette of CSS variables. All `entchen-components` rely on these variables for consistent styling.
 
 ---
 
 ## Key Features
 
 * **Automatic Color Scales**: Generates a 10-step shade palette for each base color, providing design flexibility.
-* **Centralized Theming**: Ensures all child `entchenComponents` share a consistent and predictable visual style.
+* **Centralized Theming**: Ensures all child `entchen-components` share a consistent and predictable visual style.
 * **Flexible Color Formats**: Accepts standard CSS color names (e.g., "tomato") and hex codes.
 * **Theme Access**: Exports a `useTheme` hook for direct access to the theme object within components.
 
@@ -23,7 +23,7 @@ The `EntchenProvider` is a critical component that injects a complete theming sy
 For proper styling, you must wrap your application's root layout or component tree with a single `EntchenProvider`.
 
 ```jsx
-import { EntchenProvider } from "entchenComponents";
+import { EntchenProvider } from "entchen-components";
 import YourApp from "./YourApp";
 
 function App() {
@@ -82,7 +82,7 @@ The same process is applied to `secondary`, `text`, and `text-secondary`, giving
 The provider also exports a `useTheme` hook, which allows any child component to access the original theme object directly. This can be useful for custom components that need to perform logic based on the theme colors.
 
 ```jsx
-import { useTheme } from "entchenComponents";
+import { useTheme } from "entchen-components";
 
 function CustomComponent() {
   // Access the raw theme object provided to EntchenProvider

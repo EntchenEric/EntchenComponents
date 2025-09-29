@@ -1,7 +1,7 @@
 "use client"
 
-import { colourNameToHex, darkenRgb, hexToRgb } from '../../utils/colorUtils';
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { colourNameToHex, darkenRgb, hexToRgb } from '../utils/colorUtils';
 
 export interface Theme {
     primaryColor: string;
@@ -9,8 +9,6 @@ export interface Theme {
     textColor: string;
     textSecondaryColor: string;
 }
-
-const ThemeContext = createContext<Theme | undefined>(undefined);
 
 interface EntchenProviderProps {
     children: ReactNode;
@@ -24,7 +22,6 @@ export const EntchenProvider = ({ children, theme }: EntchenProviderProps) => {
     const parsedTextSecondary = hexToRgb(colourNameToHex(theme.textSecondaryColor) || theme.textSecondaryColor)
 
     return (
-        <ThemeContext.Provider value={theme}>
             <div style={{
                 ...({
                     '--entchen-primary': parsedPrimary,
@@ -71,14 +68,5 @@ export const EntchenProvider = ({ children, theme }: EntchenProviderProps) => {
             }}>
                 {children}
             </div>
-        </ThemeContext.Provider>
     );
-};
-
-export const useTheme = (): Theme => {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        throw new Error('Please wrap EntchenComponents in a EntchenProvider.');
-    }
-    return context;
 };
