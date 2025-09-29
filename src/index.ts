@@ -4,3 +4,4 @@ export { Card } from "./Card";
 export { Dialog } from "./Dialog";
 export { EntchenProvider } from "./EntchenProvider";
 export { HeroSection } from "./HeroSection";
+export { DatePicker } from "./DatePicker"

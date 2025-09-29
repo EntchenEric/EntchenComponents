@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Popover } from "entchen-components/src/Popover"
 import { HeroSection } from "entchen-components/src/HeroSection"
+import {DatePicker} from "entchen-components/src/DatePicker"
 
 /**
  * Renders the demo home page showcasing Entchen components.
@@ -21,6 +21,9 @@ export default function Home() {
         trigger="click me!"
         popoverContent="Hallo!"
       />
+      <DatePicker />
+      <DatePicker locale="de-DE"/>
+      <DatePicker locale="en-US"/>
     </div>
   );
 }
