@@ -85,6 +85,11 @@ export const Dialog = ({
     const [rendered, setRendered] = useState(false);
     const [visible, setVisible] = useState(false);
 
+    /**
+     * Opens the dialog by mounting its markup, triggering the entrance animation, and disabling background scrolling.
+     *
+     * Sets the dialog to be rendered, schedules the visible state for the entrance animation on the next animation frame, and sets `document.body.style.overflow` to `"hidden"` to prevent page scrolling while the dialog is open.
+     */
     function openDialog() {
         setRendered(true);
 
@@ -94,6 +99,11 @@ export const Dialog = ({
         document.body.style.overflow = "hidden";
     }
 
+    /**
+     * Closes the dialog: triggers the exit animation, restores page scrolling, invokes the optional close callback, and unmounts the dialog after the animation duration.
+     *
+     * If an `onDialogClose` callback was provided, it will be called immediately when closing begins.
+     */
     function closeDialog() {
         setVisible(false);
         document.body.style.overflow = "";
