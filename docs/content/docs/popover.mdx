@@ -9,49 +9,58 @@ The `Popover` component is used to display additional information or actions in 
 
 
 
----
+***
 
 ## Features
 
 * **Custom Trigger**: Any React node can be used as the trigger element.
+* **Controlled and Uncontrolled Modes**: Can manage its own state internally or be fully controlled by a parent component.
 * **Animated Entrance**: The popover content appears with a subtle fade-in and scale animation.
 * **Smart Dismiss**: Automatically closes when the user clicks anywhere outside of the popover.
 * **Styled Arrow**: Includes a CSS-generated arrow that points to the trigger element for a clear visual connection.
-* **Controlled Mode**: The open/closed state can be controlled externally via an `open` prop.
 
----
+***
 
 ## Props
 
 | Prop | Type | Required | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `trigger` | `ReactNode` | Yes | — | The element that the user clicks to open or close the popover. |
+| `trigger` | `ReactNode` | Yes | — | The element that the user clicks to toggle the popover. |
 | `popoverContent` | `ReactNode` | Yes | — | The content to be displayed inside the popover panel. |
-| `open` | `boolean` | No | `false` | A prop to manually control the visibility of the popover from a parent component. |
+| `defaultOpen` | `boolean` | No | `false` | The initial open state of the popover in **uncontrolled** mode. Ignored if `open` is provided. |
+| `open` | `boolean` | No | — | When provided, the component is **controlled**. You must manage the state and pass it to this prop. |
+| `onOpenChange` | `(open: boolean) => void` | No | — | Callback fired when the open state changes. **Required** when using the controlled `open` prop. |
 
----
+***
 
 ## Behavior
 
 * **Toggling**: Clicking the `trigger` element toggles the popover's visibility.
-* **Click Outside**: The component listens for clicks on the document. If a click occurs outside of the popover's container (including both the trigger and the content), the popover will close. This ensures a non-intrusive user experience.
+* **Click Outside**: The component listens for clicks on the document. If a click occurs outside of the popover's container (including both the trigger and the content), the popover will close.
 * **Positioning**: The popover content is positioned absolutely, directly below its trigger with a small offset.
 
----
+### Controlled vs. Uncontrolled Modes
 
-## Usage Example
+By default, the `Popover` is **uncontrolled**, meaning it manages its own open/close state internally. You can set its initial state using the `defaultOpen` prop.
 
-Here's how to use the `Popover` with a `Button` component as its trigger.
+To create a **controlled** `Popover`, pass the `open` and `onOpenChange` props. This allows you to manage the popover's state in the parent component, which is useful for more complex scenarios, such as closing the popover from an action within its content.
+
+***
+
+## Usage Examples
+
+### Uncontrolled Example
+
+This is the simplest way to use the `Popover`. It will manage its own state.
 
 ```jsx
 import { Popover, Button } from "entchenComponents";
 
-function UserProfile() {
+function SimplePopover() {
   const userMenu = (
     <div>
       <p style={{ margin: 0, fontWeight: 600 }}>Jane Doe</p>
       <a href="/profile" style={{ display: 'block', marginTop: '8px' }}>View Profile</a>
-      <a href="/logout" style={{ display: 'block', marginTop: '4px' }}>Sign Out</a>
     </div>
   );
 
@@ -64,7 +73,42 @@ function UserProfile() {
 }
 ```
 
----
+### Controlled Example
+
+In this example, the parent component controls the `Popover`'s state. This allows the "Sign Out" button inside the popover to close it.
+
+```jsx
+import React, { useState } from "react";
+import { Popover, Button } from "entchenComponents";
+
+function ControlledPopover() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const userMenu = (
+    <div>
+      <p style={{ margin: 0, fontWeight: 600 }}>Jane Doe</p>
+      <a href="/profile" style={{ display: 'block', marginTop: '8px' }}>View Profile</a>
+      <Button
+        title="Sign Out"
+        variant="secondary"
+        onClick={() => setIsOpen(false)} // Close the popover on click
+        style={{ marginTop: '12px' }}
+      />
+    </div>
+  );
+
+  return (
+    <Popover
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      trigger={<Button title="My Account" />}
+      popoverContent={userMenu}
+    />
+  );
+}
+```
+
+***
 
 ## Styling Details
 
