@@ -1,13 +1,29 @@
 "use client"
 
-import React, { useState, useRef, useEffect, ReactNode } from "react";
+import React, { useState, useRef, useEffect, ReactNode, useCallback } from "react";
 import styled, { keyframes } from 'styled-components'
 
 // #region Component Interfaces
 export interface PopoverProps {
+    /** The element that triggers the popover to open. */
     trigger: ReactNode;
+    /** The content to display inside the popover. */
     popoverContent: ReactNode;
+    /**
+     * The controlled open state of the popover.
+     * When provided, the component is "controlled" and you must also provide onOpenChange.
+     */
     open?: boolean;
+    /**
+     * The initial open state for an uncontrolled popover.
+     * This is ignored if the `open` prop is provided.
+     */
+    defaultOpen?: boolean;
+    /**
+     * Callback function invoked when the open state changes.
+     * Required when using the `open` prop.
+     */
+    onOpenChange?: (open: boolean) => void;
 }
 // #endregion
 
@@ -79,19 +95,34 @@ const Content = styled.div`
 export const Popover = ({
     trigger,
     popoverContent,
-    open: defaultOpen = false
+    open,
+    onOpenChange,
+    defaultOpen = false
 }: PopoverProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(defaultOpen);
+    const isControlled = open !== undefined;
+    
+    const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
+
+    const isOpen = isControlled ? open : internalIsOpen;
+    
     const popoverRef = useRef<HTMLDivElement>(null);
 
+    const handleSetOpen = useCallback((newOpenState: boolean) => {
+        if (isControlled) {
+            onOpenChange?.(newOpenState);
+        } else {
+            setInternalIsOpen(newOpenState);
+        }
+    }, [isControlled, onOpenChange]);
+
     const handleToggle = () => {
-        setIsOpen(prev => !prev);
+        handleSetOpen(!isOpen);
     };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
+                handleSetOpen(false);
             }
         };
 
@@ -102,7 +133,7 @@ export const Popover = ({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isOpen]);
+    }, [isOpen, handleSetOpen]);
 
     return (
         <Container ref={popoverRef}>

@@ -6,7 +6,7 @@ import { ImageData } from "../HeroSection/HeroSection";
 export interface CardProps {
   title: ReactNode;
   description: ReactNode;
-  icon?: React.FC;
+  icon?: ReactNode;
   elevateOnHover?: boolean;
   leftImage?: ImageData;
   rightImage?: ImageData;
@@ -106,7 +106,7 @@ const DescriptionParagraph = styled.p`
 export const Card: React.FC<CardProps> = ({
   title,
   description,
-  icon: Icon,
+  icon,
   elevateOnHover = true,
   leftImage,
   rightImage,
@@ -125,9 +125,9 @@ export const Card: React.FC<CardProps> = ({
 
         <TextContent>
           <TitleWrapper>
-            {Icon && (
+            {icon && (
               <IconWrapper aria-hidden="true">
-                <Icon />
+                {icon}
               </IconWrapper>
             )}
             {typeof title === "string" ? (

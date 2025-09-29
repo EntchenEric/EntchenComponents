@@ -8,7 +8,7 @@ export interface AlertProps {
   variant?: AlertVariant;
   title: ReactNode;
   description?: ReactNode;
-  icon?: React.FC;
+  icon?: ReactNode;
 }
 // #endregion
 
@@ -87,7 +87,7 @@ export const Alert = ({
   variant = "default",
   title,
   description,
-  icon: Icon,
+  icon,
 }: AlertProps) => {
   return (
     <AlertContainer
@@ -96,9 +96,9 @@ export const Alert = ({
       aria-live="polite"
       aria-atomic="true"
     >
-      {Icon && (
+      {icon && (
         <IconWrapper>
-          <Icon />
+          {icon}
         </IconWrapper>
       )}
       <TextWrapper>
