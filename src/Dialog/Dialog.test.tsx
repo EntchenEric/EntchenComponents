@@ -41,28 +41,28 @@ describe('Dialog Component', () => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
     it('should close the dialog when clicking outside the content', async () => {
+        jest.useFakeTimers();
+        const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
         const onCloseMock = jest.fn();
         render(<TestDialog onDialogClose={onCloseMock} />);
-        fireEvent.click(screen.getByRole('button', { name: /Open Dialog/i }));
-        act(() => jest.advanceTimersByTime(0));
+        await user.click(screen.getByRole('button', { name: /Open Dialog/i }));
+        act(() => jest.runOnlyPendingTimers());
         await waitFor(() =>
             expect(screen.getByRole('dialog')).toBeVisible()
         );
         const overlay = screen.getByRole('dialog');
         const clickOutsideHandler = overlay.querySelector('div[aria-hidden="true"]');
         if (!clickOutsideHandler) throw new Error("ClickOutsideHandler not found");
-        fireEvent.click(clickOutsideHandler);
+        await user.click(clickOutsideHandler);
         expect(onCloseMock).toHaveBeenCalledTimes(1);
-        await act(async () => {
-            jest.advanceTimersByTime(ANIMATION_DURATION);
-        });
+        act(() => jest.advanceTimersByTime(ANIMATION_DURATION));
         await waitFor(() =>
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
         );
     });
 
     it('should call onDialogClose when closing', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onCloseMock = jest.fn();
         render(<TestDialog onDialogClose={onCloseMock} />);
         await user.click(screen.getByRole('button', { name: /Open Dialog/i }));

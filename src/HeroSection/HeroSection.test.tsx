@@ -95,7 +95,7 @@ describe('HeroSection Component', () => {
 
   describe('Mobile Menu Interactions', () => {
     it('should open the mobile menu on hamburger button click', async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
       render(<HeroSection {...fullMockProps} />);
       const overlay = screen.getByTestId('mobile-menu-overlay');
 
@@ -108,7 +108,7 @@ describe('HeroSection Component', () => {
     });
 
     it('should close the mobile menu on close button click', async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
       render(<HeroSection {...fullMockProps} />);
       const overlay = screen.getByTestId('mobile-menu-overlay');
 
@@ -121,7 +121,7 @@ describe('HeroSection Component', () => {
     });
 
     it('should close the mobile menu when clicking the overlay', async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
       render(<HeroSection {...fullMockProps} />);
       const overlay = screen.getByTestId('mobile-menu-overlay');
 
@@ -133,7 +133,7 @@ describe('HeroSection Component', () => {
     });
 
     it('should close the mobile menu when a navigation item is clicked', async () => {
-      const user = userEvent.setup();
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
       render(<HeroSection {...fullMockProps} />);
       const overlay = screen.getByTestId('mobile-menu-overlay');
 

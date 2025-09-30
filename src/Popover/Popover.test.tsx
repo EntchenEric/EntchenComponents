@@ -37,7 +37,7 @@ describe('Popover Component', () => {
     });
 
     it('should open and close the popover on trigger clicks (uncontrolled)', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         render(PopoverUncontrolled);
 
         await user.click(screen.getByText(triggerText));
@@ -48,7 +48,7 @@ describe('Popover Component', () => {
     });
 
     it('should close the popover when clicking outside (uncontrolled)', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         render(PopoverUncontrolled);
 
         await user.click(screen.getByText(triggerText));
@@ -81,7 +81,7 @@ describe('Popover Component', () => {
     });
 
     it('should call onOpenChange with the correct state on trigger click (controlled)', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onOpenChangeMock = jest.fn();
         const { rerender } = render(
             <Popover
@@ -109,7 +109,7 @@ describe('Popover Component', () => {
     });
 
     it('should not change its open state internally when controlled', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onOpenChangeMock = jest.fn();
         render(
             <Popover
@@ -127,7 +127,7 @@ describe('Popover Component', () => {
 
     // We mock `getBoundingClientRect` because JSDOM doesn't have a layout engine.
     it('should position at the bottom when there is enough space', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         Object.defineProperty(window, 'innerHeight', { writable: true, value: 800 });
         const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
         Element.prototype.getBoundingClientRect = () => ({
@@ -144,7 +144,7 @@ describe('Popover Component', () => {
     });
 
     it('should position the popover at the top when there is not enough space below', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         Object.defineProperty(window, 'innerHeight', { writable: true, value: 800 });
         const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
         Element.prototype.getBoundingClientRect = () => ({

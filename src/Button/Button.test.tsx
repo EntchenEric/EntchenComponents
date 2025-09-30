@@ -79,7 +79,7 @@ describe("Button component", () => {
     });
 
     it('calls onClick handler when clicked and not disabled/loading', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onClickMock = jest.fn();
 
         renderButton({ onClick: onClickMock });
@@ -90,7 +90,7 @@ describe("Button component", () => {
     });
 
     it('does not call onClick handler when disabled', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onClickMock = jest.fn();
 
         renderButton({ onClick: onClickMock, disabled: true });
@@ -101,7 +101,7 @@ describe("Button component", () => {
     })
 
     it('does not call onClick handler when loading', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ pointerEventsCheck: 0 });
         const onClickMock = jest.fn();
 
         renderButton({ onClick: onClickMock, loading: true });

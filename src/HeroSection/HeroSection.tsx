@@ -398,7 +398,6 @@ export const HeroSection = ({
                 href={item.link}
                 key={JSON.stringify(item)}
                 onClick={(event) => {
-                  event.preventDefault()
                   setMenuOpen(false)
                 }}
               >
