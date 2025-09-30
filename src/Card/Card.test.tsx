@@ -54,8 +54,20 @@ describe("Card Component", () => {
     });
 
     it("should not elevate on hover if elevateOnHover is false", () => {
-        renderCard({ elevateOnHover: false });
+        const { container } = renderCard({ elevateOnHover: false });
 
+        const cardContainer = container.firstChild;
+
+        expect(cardContainer).not.toHaveStyleRule(
+            'transform',
+            'translateY(-0.25rem)',
+            { modifier: ':hover' }
+        );
+        expect(cardContainer).not.toHaveStyleRule(
+            'box-shadow',
+            expect.stringContaining('0 20px 25px'),
+            { modifier: ':hover' }
+        );
     });
 
     it("should display left image when leftImage prop is passed", () => {
