@@ -1,25 +1,24 @@
 ---
-title: Popover
-description: A flexible popover component that displays content in a floating panel, triggered by a clickable element.
+title: Popover 
+description: A flexible popover component that displays content in a floating panel, triggered by a clickable element, with automatic positioning.
 ---
 
 # Popover
 
 The `Popover` component is used to display additional information or actions in a floating panel that appears next to a trigger element. It's ideal for menus, extra details, or forms that shouldn't clutter the main UI.
 
-
-
-***
+-----
 
 ## Features
 
-* **Custom Trigger**: Any React node can be used as the trigger element.
-* **Controlled and Uncontrolled Modes**: Can manage its own state internally or be fully controlled by a parent component.
-* **Animated Entrance**: The popover content appears with a subtle fade-in and scale animation.
-* **Smart Dismiss**: Automatically closes when the user clicks anywhere outside of the popover.
-* **Styled Arrow**: Includes a CSS-generated arrow that points to the trigger element for a clear visual connection.
+  * **Custom Trigger**: Any React node can be used as the trigger element.
+  * **Controlled and Uncontrolled Modes**: Can manage its own state internally or be fully controlled by a parent component.
+  * **Smart Positioning**: Automatically positions itself **above or below** the trigger to ensure it remains visible within the viewport.
+  * **Animated Entrance**: The popover content appears with a subtle fade-in and scale animation tailored to its position.
+  * **Smart Dismiss**: Automatically closes when the user clicks anywhere outside of the popover.
+  * **Dynamic Styled Arrow**: Includes a CSS-generated arrow that flips its position to always point toward the trigger element, creating a clear visual connection.
 
-***
+-----
 
 ## Props
 
@@ -31,13 +30,13 @@ The `Popover` component is used to display additional information or actions in 
 | `open` | `boolean` | No | — | When provided, the component is **controlled**. You must manage the state and pass it to this prop. |
 | `onOpenChange` | `(open: boolean) => void` | No | — | Callback fired when the open state changes. **Required** when using the controlled `open` prop. |
 
-***
+-----
 
 ## Behavior
 
-* **Toggling**: Clicking the `trigger` element toggles the popover's visibility.
-* **Click Outside**: The component listens for clicks on the document. If a click occurs outside of the popover's container (including both the trigger and the content), the popover will close.
-* **Positioning**: The popover content is positioned absolutely, directly below its trigger with a small offset.
+  * **Toggling**: Clicking the `trigger` element toggles the popover's visibility.
+  * **Click Outside**: The component listens for clicks on the document. If a click occurs outside of the popover's container (including both the trigger and the content), the popover will close.
+  * **Positioning**: When opened, the popover intelligently calculates the available space in the viewport. If there isn't enough space below the trigger to display the content without being cut off, it will automatically flip to display itself **above** the trigger instead.
 
 ### Controlled vs. Uncontrolled Modes
 
@@ -45,16 +44,17 @@ By default, the `Popover` is **uncontrolled**, meaning it manages its own open/c
 
 To create a **controlled** `Popover`, pass the `open` and `onOpenChange` props. This allows you to manage the popover's state in the parent component, which is useful for more complex scenarios, such as closing the popover from an action within its content.
 
-***
+-----
 
 ## Usage Examples
 
 ### Uncontrolled Example
 
-This is the simplest way to use the `Popover`. It will manage its own state.
+This is the simplest way to use the `Popover`. It will manage its own state automatically.
 
 ```jsx
-import { Popover, Button } from "entchen-components";
+import { Popover } from "entchenComponents";
+import { Button } from "entchenComponents";
 
 function SimplePopover() {
   const userMenu = (
@@ -79,7 +79,7 @@ In this example, the parent component controls the `Popover`'s state. This allow
 
 ```jsx
 import React, { useState } from "react";
-import { Popover, Button } from "entchen-components";
+import { Popover, Button } from "entchenComponents";
 
 function ControlledPopover() {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,11 +108,11 @@ function ControlledPopover() {
 }
 ```
 
-***
+-----
 
 ## Styling Details
 
-* **Implementation**: The `Popover` is built with **styled-components** and is themed using CSS variables from the `EntchenProvider` (e.g., `--entchen-primary`, `--entchen-text`).
-* **Content Panel**: The floating panel has a distinct style, featuring a themed background color, a subtle border, rounded corners, and a multi-layered `box-shadow` for depth.
-* **Animation**: The panel uses CSS `keyframes` for a smooth entrance animation that animates `opacity`, `transform: scale()`, and `transform: translateY()`.
-* **Indicator Arrow**: A small triangular arrow is created using the `::before` and `::after` pseudo-elements. It's positioned at the top of the content panel and uses the border trick to point back towards the trigger, visually anchoring the popover.
+  * **Implementation**: The `Popover` is built with **styled-components** and is themed using CSS variables from the `EntchenProvider` (e.g., `--entchen-primary`, `--entchen-text`).
+  * **Content Panel**: The floating panel has a distinct style, featuring a themed background color, a subtle border (`--entchen-primary-100`), rounded corners, and a multi-layered `box-shadow` for depth.
+  * **Animation**: The panel uses CSS `keyframes` for a smooth entrance animation. The animation direction changes based on the popover's position, translating it slightly down when opening from the top and up when opening from the bottom.
+  * **Indicator Arrow**: A small, two-toned triangular arrow is created using the `::before` (for the border) and `::after` (for the fill) pseudo-elements. It is dynamically positioned at the top or bottom of the content panel to always point back towards the trigger, visually anchoring the popover.

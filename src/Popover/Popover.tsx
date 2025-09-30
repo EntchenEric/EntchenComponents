@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState, useRef, useEffect, ReactNode, useCallback } from "react";
-import styled, { keyframes } from 'styled-components'
+import React, { useState, useRef, useEffect, ReactNode, useCallback, useLayoutEffect } from "react";
+import styled, { keyframes, css } from 'styled-components'
 
 // #region Component Interfaces
 export interface PopoverProps {
@@ -49,10 +49,68 @@ const fadeIn = keyframes`
   }
 `;
 
-const Content = styled.div`
+const arrowBaseStyles = css`
+    content: '';
+    position: absolute;
+    left: 24px;
+    transform: translateX(-50%);
+    border-style: solid;
+`;
+
+const positionBottomStyles = css`
+    top: calc(100% + 12px);
+    transform-origin: top left;
+    
+    &::before {
+        ${arrowBaseStyles};
+        bottom: 100%;
+        border-width: 8px;
+        border-color: transparent transparent var(--entchen-primary-100) transparent;
+    }
+    
+    &::after {
+        ${arrowBaseStyles};
+        bottom: 100%;
+        transform: translateX(-50%) translateY(1.5px);
+        border-width: 7px;
+        border-color: transparent transparent var(--entchen-primary) transparent;
+    }
+`;
+
+const positionTopStyles = css`
+    bottom: calc(100% + 12px);
+    transform-origin: bottom left;
+
+    animation-name: ${keyframes`
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    `};
+
+    &::before {
+        ${arrowBaseStyles};
+        top: 100%;
+        border-width: 8px;
+        border-color: var(--entchen-primary-100) transparent transparent transparent;
+    }
+    
+    &::after {
+        ${arrowBaseStyles};
+        top: 100%;
+        transform: translateX(-50%) translateY(-1.5px);
+        border-width: 7px;
+        border-color: var(--entchen-primary) transparent transparent transparent;
+    }
+`;
+
+const Content = styled.div<{ position: 'top' | 'bottom' }>`
     position: absolute;
     left: 0;
-    top: calc(100% + 12px);
     z-index: 10;
     min-width: 250px;
 
@@ -65,30 +123,8 @@ const Content = styled.div`
                 0 8px 16px -8px rgba(0, 0, 0, 0.05);
 
     animation: ${fadeIn} 0.2s ease-out;
-    transform-origin: top left;
 
-    &::before {
-        content: '';
-        position: absolute;
-        bottom: 100%;
-        left: 24px;
-        transform: translateX(-50%);
-        border-width: 8px;
-        border-style: solid;
-        border-color: transparent transparent var(--entchen-primary-100) transparent;
-    }
-    
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: 100%;
-        left: 24px;
-        transform: translateX(-50%) translateY(1.5px);
-
-        border-width: 7px;
-        border-style: solid;
-        border-color: transparent transparent var(--entchen-primary) transparent;
-    }
+    ${({ position }) => (position === 'top' ? positionTopStyles : positionBottomStyles)}
 `;
 // #endregion
 
@@ -100,12 +136,14 @@ export const Popover = ({
     defaultOpen = false
 }: PopoverProps) => {
     const isControlled = open !== undefined;
-    
     const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
-
     const isOpen = isControlled ? open : internalIsOpen;
+
+    const [position, setPosition] = useState<'top' | 'bottom'>('bottom');
     
-    const popoverRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLDivElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     const handleSetOpen = useCallback((newOpenState: boolean) => {
         if (isControlled) {
@@ -119,9 +157,32 @@ export const Popover = ({
         handleSetOpen(!isOpen);
     };
 
+    useLayoutEffect(() => {
+        if (isOpen) {
+            const calculatePosition = () => {
+                if (!triggerRef.current || !contentRef.current) return;
+
+                const triggerRect = triggerRef.current.getBoundingClientRect();
+                const contentHeight = contentRef.current.offsetHeight;
+                const viewHeight = window.innerHeight;
+                const spaceAbove = triggerRect.top;
+                const spaceBelow = viewHeight - triggerRect.bottom;
+                const popoverHeightWithGap = contentHeight + 12;
+
+                if (spaceBelow < popoverHeightWithGap && spaceAbove > spaceBelow) {
+                    setPosition('top');
+                } else {
+                    setPosition('bottom');
+                }
+            };
+
+            calculatePosition();
+        }
+    }, [isOpen]);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 handleSetOpen(false);
             }
         };
@@ -136,13 +197,13 @@ export const Popover = ({
     }, [isOpen, handleSetOpen]);
 
     return (
-        <Container ref={popoverRef}>
-            <Trigger onClick={handleToggle}>
+        <Container ref={containerRef}>
+            <Trigger onClick={handleToggle} ref={triggerRef}>
                 {trigger}
             </Trigger>
 
             {isOpen && (
-                <Content>
+                <Content ref={contentRef} position={position}>
                     {popoverContent}
                 </Content>
             )}
