@@ -140,7 +140,7 @@ export const Popover = ({
     const isOpen = isControlled ? open : internalIsOpen;
 
     const [position, setPosition] = useState<'top' | 'bottom'>('bottom');
-    
+
     const containerRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -203,7 +203,12 @@ export const Popover = ({
             </Trigger>
 
             {isOpen && (
-                <Content ref={contentRef} position={position}>
+                <Content
+                    ref={contentRef}
+                    position={position}
+                    data-testid="popover-content"
+                    data-position={position}
+                >
                     {popoverContent}
                 </Content>
             )}
