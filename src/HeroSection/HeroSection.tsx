@@ -377,6 +377,7 @@ export const HeroSection = ({
           onClick={() => setMenuOpen(false)}
           aria-hidden={!menuOpen}
           tabIndex={-1}
+          data-testid="mobile-menu-overlay"
         />
 
         <MobileMenuAside
@@ -396,7 +397,9 @@ export const HeroSection = ({
               <MobileMenuItem
                 href={item.link}
                 key={JSON.stringify(item)}
-                onClick={() => setMenuOpen(false)}
+                onClick={(event) => {
+                  setMenuOpen(false)
+                }}
               >
                 {item.title}
               </MobileMenuItem>
