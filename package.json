@@ -1,6 +1,6 @@
 {
   "name": "entchen-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Some Components made by a duck!",
   "main": "dist/cjs/index.js",
