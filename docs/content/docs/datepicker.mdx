@@ -1,0 +1,94 @@
+---
+title: DatePicker
+description: A flexibl and accessible date picker component for selecting a single date from a calendar.
+---
+
+# DatePicker
+
+The `DatePicker` component provides a user-friendly interface for selecting a single date. It renders a trigger button that, when clicked, opens a popover containing a calendar view. The component is highly customizable, supporting controlled and uncontrolled states, internationalization, and a configurable year range.
+
+---
+
+## Features
+
+- **Controlled & Uncontrolled Modes**: Can be used as a controlled component via the `value` and `onChange` props, or as an uncontrolled component with `defaultValue`.
+- **Internationalization (i18n)**: Automatically formats dates, month names, and weekday labels according to the provided `locale`. It also intelligently determines whether the week starts on Sunday or Monday based on the locale.
+- **Intuitive Navigation**: Users can navigate between months using previous/next buttons or select a specific month and year directly from dropdown menus.
+- **Customizable Year Range**: The range of years available in the year dropdown can be easily configured with the `yearRange` prop.
+- **Clear Visual States**: The currently selected date and today's date are visually distinct, making the calendar easy to read.
+- **Accessible Design**: Built upon an accessible `Popover` component, with ARIA labels for all interactive elements to ensure screen reader compatibility.
+
+---
+
+## Props
+
+| Prop           | Type                               | Required | Default                                                 | Description                                                                                              |
+| :------------- | :--------------------------------- | :------- | :------------------------------------------------------ | :------------------------------------------------------------------------------------------------------- |
+| `value`        | `Date \| null`                     | No       | —                                                       | The selected date, used for creating a controlled component.                                             |
+| `defaultValue` | `Date \| null`                     | No       | `null`                                                  | The initially selected date, used for creating an uncontrolled component.                                |
+| `onChange`     | `(date: Date) => void`             | No       | —                                                       | Callback function fired when a new date is selected.                                                     |
+| `placeholder`  | `string`                           | No       | `"Select a date"`                                       | The placeholder text displayed in the trigger button when no date is selected.                           |
+| `locale`       | `string`                           | No       | Browser's default                                       | The locale for date formatting (e.g., `'en-US'`, `'de-DE'`). Defaults to the user's browser language. |
+| `yearRange`    | `{ from: number; to: number }`     | No       | `{ from: current year - 100, to: current year + 10 }` | An object defining the start and end years to display in the year selection dropdown.                    |
+
+---
+
+## Behavior & Accessibility
+
+- The component uses a `<button>` element as its trigger, which is universally accessible.
+- The popover containing the calendar manages focus, trapping it within the calendar when open and returning it to the trigger on close.
+- Navigation buttons for changing the month are equipped with `aria-label` attributes (e.g., `"Previous month"`) for clarity.
+- The month and year `<select>` elements also have `aria-label`s to describe their function to screen reader users.
+
+---
+
+## Usage Example
+
+```jsx
+import React, { useState } from "react";
+import { DatePicker } from "entchen-components";
+
+function DatePickerDemo() {
+  // Example of a controlled DatePicker
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      
+      <h3>Controlled DatePicker</h3>
+      <DatePicker
+        value={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        locale="en-US"
+      />
+
+      <h3>Uncontrolled with Custom Placeholder & Year Range</h3>
+      <DatePicker
+        defaultValue={null}
+        placeholder="Choose your birth date"
+        locale="de-DE"
+        yearRange={{ from: 1980, to: 2025 }}
+        onChange={(date) => console.log("New date selected:", date)}
+      />
+      
+    </div>
+  );
+}
+```
+
+-----
+
+## Styling Details
+
+The `DatePicker` is styled using **styled-components** and relies on CSS variables provided by `EntchenProvider` for theming.
+
+  - **`TriggerButton`**: An `inline-flex` button that displays the selected date or placeholder. It uses `--entchen-primary` for its background and has hover and focus-visible states for interactivity.
+  - **`CalendarContainer`**: The main wrapper for the calendar inside the popover, styled with a flex layout.
+  - **`CalendarHeader`**: Contains the navigation elements (`NavButton`) and selection dropdowns (`HeaderSelect`), arranged using `justify-content: space-between`.
+  - **`HeaderSelect`**: The month and year dropdowns are custom-styled to remove default browser appearances. They feature a custom dropdown arrow icon and themed hover/focus states.
+  - **`CalendarGrid`**: A `display: grid` container with 7 columns that arranges the weekday labels and day buttons.
+  - **`DayButton`**: This is the core interactive element for each day in the calendar. It has several conditional styles:
+      - **`$isSelected`**: Applies a solid background color (`--entchen-secondary`) and bold font weight to the currently selected day.
+      - **`$isToday`**: Adds a distinct border color (`--entchen-secondary-500`) to mark the current day.
+      - **`$isOutsideMonth`**: Renders days from the previous and next months with a dimmed text color and disables them.
+      - It also features a default background color change on hover for days within the current month.

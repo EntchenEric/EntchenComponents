@@ -1,96 +1,98 @@
 ---
-title: HeroSection
-description: A responsive hero section component with optional background image, navigation menu, and main content.
+title: EntchenProvider
+description: The Provider that wraps all entchen-components to supply a complete, auto-generated theming system via CSS variables.
 ---
 
-# HeroSection
+# EntchenProvider
 
-The `HeroSection` component is a full-screen header designed for landing pages or key entry points. It features an optional background image, responsive navigation menu with mobile support, a main content area with title, description, action links, and an optional main image.
-
----
-
-## Features
-
-- Full viewport height hero section with optional background image.
-- Responsive navigation menu:
-  - Horizontal menu on medium and larger screens.
-  - Hamburger button toggles slide-in mobile menu on smaller screens.
-- Accessible mobile menu drawer with backdrop overlay.
-- Flexible content area supporting text titles/descriptions and clickable links.
-- Supports string or React components for titles and menu item labels.
+The `EntchenProvider` is a critical component that injects a complete theming system into your application. It takes a small set of base colors and automatically generates a full palette of CSS variables. All `entchen-components` rely on these variables for consistent styling.
 
 ---
 
-## Props Overview
+## Key Features
 
-| Prop             | Required | Description                                                                                       |
-|------------------|----------|---------------------------------------------------------------------------------------------------|
-| `title`          | Yes      | Site or brand title shown in the top-left corner; can be a string or React component.            |
-| `backgroundImage` | No       | Optional fullscreen background image (`url` and optional `alt`).                                  |
-| `menuItems`      | No       | Array of navigation items (each has a link URL and title as string or React component).           |
-| `image`          | No       | Optional main image displayed alongside the content (`url` and optional `alt`).                   |
-| `mainContent`    | Yes      | Object containing the primary heading (`title`), descriptive text (`description`), and optional action links. |
+* **Automatic Color Scales**: Generates a 10-step shade palette for each base color, providing design flexibility.
+* **Centralized Theming**: Ensures all child `entchen-components` share a consistent and predictable visual style.
+* **Flexible Color Formats**: Accepts standard CSS color names (e.g., "tomato") and hex codes.
+* **Theme Access**: Exports a `useTheme` hook for direct access to the theme object within components.
 
 ---
 
-## Behavior & Accessibility
+## Usage
 
-- The desktop navigation displays inline links; on smaller screens it collapses into a hamburger icon.
-- Clicking the hamburger opens a side drawer containing the navigation links.
-- A semi-transparent backdrop appears behind the drawer; clicking it closes the menu.
-- Buttons have ARIA labels ("Open Menu" / "Close Menu") to aid screen reader users.
-- Titles and menu labels support both plain strings and custom React components.
-
----
-
-## Usage Example
+For proper styling, you must wrap your application's root layout or component tree with a single `EntchenProvider`.
 
 ```jsx
-import { HeroSection } from "entchenComponents";
-
-const menuItems = [
-  { link: "/about", title: "About" },
-  { link: "/services", title: "Services" },
-  { link: "/contact", title: () => <strong>Contact Us</strong> },
-];
-
-const mainContent = {
-  title: "Welcome to Our Platform",
-  description:
-    "Discover amazing features that help you grow your business efficiently.",
-  links: [
-    { link: "/signup", title: "Get Started" },
-    { link: "/learn-more", title: "Learn More" },
-  ],
-};
-
-const backgroundImage = {
-  url: "/images/hero-bg.jpg",
-  alt: "Abstract colorful background",
-};
-
-const heroImage = {
-  url: "/images/hero-image.png",
-  alt: "Illustration of product usage",
-};
+import { EntchenProvider } from "entchen-components";
+import YourApp from "./YourApp";
 
 function App() {
+  const myTheme = {
+    primaryColor: "#007bff", // A bright blue
+    secondaryColor: "#6c757d", // A muted gray
+    textColor: "#ffffff", // White text for primary backgrounds
+    textSecondaryColor: "#212529" // Dark text for secondary backgrounds
+  };
+
   return (
-    <HeroSection
-      title="MyBrand"
-      backgroundImage={backgroundImage}
-      menuItems={menuItems}
-      image={heroImage}
-      mainContent={mainContent}
-    />
+    <EntchenProvider theme={myTheme}>
+      <YourApp />
+    </EntchenProvider>
   );
 }
 ```
 
 ---
 
-## Styling Notes
+## Theme Configuration
 
-- Background overlay applies partial opacity with blur for visual depth.
-- Mobile drawer slides in/out smoothly using CSS transitions.
-- Images use Next.js `<Image>` component optimized for performance.
+The `theme` prop accepts an object with four base color properties. These can be any valid CSS color name or a hex string.
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `primaryColor` | `string` | The main color for primary actions and elements like buttons. |
+| `secondaryColor` | `string` | The secondary color for less prominent UI elements. |
+| `textColor` | `string` | The default text color for use on primary color backgrounds. |
+| `textSecondaryColor` | `string` | The text color for use on secondary color backgrounds. |
+
+> **Accessibility Note**: Always ensure sufficient contrast between your background colors and their corresponding text colors. Tools like the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) can help verify your choices.
+
+---
+
+## Automatic Color Scale Generation
+
+This is the core feature of the provider. From the four base colors you provide, it automatically generates and injects **40 CSS variables** into its child scope.
+
+For each base color (e.g., `primary`), it creates a 10-step scale by progressively darkening the original color. This provides a full palette for building components.
+
+For example, providing a `primaryColor` generates:
+
+* `--entchen-primary`: Your original color.
+* `--entchen-primary-100`: A slightly darker version.
+* `--entchen-primary-200`: Darker still.
+* ...
+* `--entchen-primary-900`: The darkest shade.
+
+The same process is applied to `secondary`, `text`, and `text-secondary`, giving you a rich, consistent, and predictable set of variables to work with.
+
+---
+
+## `useTheme` Hook
+
+The provider also exports a `useTheme` hook, which allows any child component to access the original theme object directly. This can be useful for custom components that need to perform logic based on the theme colors.
+
+```jsx
+import { useTheme } from "entchen-components";
+
+function CustomComponent() {
+  // Access the raw theme object provided to EntchenProvider
+  const theme = useTheme();
+
+  const customStyle = {
+    border: `2px solid ${theme.primaryColor}`,
+    color: theme.textSecondaryColor,
+  };
+
+  return <div style={customStyle}>A custom themed component!</div>;
+}
+```

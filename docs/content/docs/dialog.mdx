@@ -1,82 +1,77 @@
 ---
 title: Dialog
-description: A modal dialog component with customizable trigger, title, description, and confirm/cancel actions.
+description: A modal dialog component with a render prop trigger, customizable content, and confirm/cancel actions.
 ---
 
 # Dialog
 
-The `Dialog` component is a fully accessible modal dialog that can be triggered by a button or custom element. It supports animated open/close transitions, customizable titles and descriptions (as strings or React components), and configurable confirm/cancel buttons with callback handlers.
+The `Dialog` component is a fully accessible modal dialog that uses a render prop for its trigger, offering maximum flexibility. It supports animated transitions, customizable titles and descriptions, and configurable confirm/cancel buttons with callback handlers.
+
+
 
 ---
 
 ## Features
 
-- Customizable trigger element (string label or React component).
-- Animated backdrop and dialog panel with smooth fade and scale transitions.
-- Supports accessible roles and ARIA attributes (`role="dialog"`, `aria-modal`, labelledby/descrbiedby).
-- Keyboard accessible:
-  - Opens on trigger click or keyboard activation.
-  - Closes on Escape key or clicking outside the dialog content.
-- Confirm and cancel buttons with customizable props and callbacks.
-- Locks page scroll when open to prevent background interaction.
+- **Flexible Trigger**: Uses a render prop for the trigger, allowing any button or element to open the dialog.
+- **Smooth Animations**: Features animated backdrop and dialog panel with fade and scale transitions on open and close.
+- **Fully Accessible**: Implements `role="dialog"`, `aria-modal`, `aria-labelledby`, and `aria-describedby` for screen reader support.
+- **Keyboard Navigation**: Closes when the **Escape** key is pressed. Focus is managed within the dialog.
+- **User-Friendly**: Closes when clicking the overlay outside the dialog content and locks page scroll when open to prevent background interaction.
 
 ---
 
 ## Props
 
-| Prop           | Type                                   | Required | Default                           | Description                                                                                               |
-|----------------|--------------------------------------|----------|---------------------------------|-----------------------------------------------------------------------------------------------------------|
-| `trigger`      | `string \| React.FC`                  | Yes      | —                               | Element that opens the dialog when clicked or activated via keyboard. Can be string label or React component. |
-| `title`        | `string \| React.FC`                  | Yes      | —                               | The main heading displayed inside the dialog. Supports string or React component.                         |
-| `description`  | `string \| React.FC`                  | No       | —                               | Optional descriptive text below the title. Supports string or React component.                            |
-| `onConfirm`    | `(closeDialog: () => void) => void`  | No       | —                               | Callback invoked when the confirm button is clicked; receives a function to close the dialog.             |
-| `onCancel`     | `(closeDialog: () => void) => void`  | No       | —                               | Callback invoked when the cancel button is clicked; receives a function to close the dialog.              |
-| `onDialogClose`| `() => void`                         | No       | —                               | Callback called after the dialog finishes closing animation (after unmount).                             |
-| `confirmButton`| `Partial<ButtonProps>`                  | No       | `{ title: "Confirm" }`          | Props passed to the confirm `<Button>` component (from entchenComponents).                                |
-| `cancelButton` | `Partial<ButtonProps>`                  | No       | `{ title: "Cancel", variant: "danger" }`  | Props passed to the cancel `<Button>` component (from entchenComponents).                                 |
+| Prop | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `trigger` | `(open: () => void) => ReactNode` | Yes | — | A render prop function that receives an `open` handler and must return a React node to act as the trigger. |
+| `title` | `ReactNode` | Yes | — | The main heading displayed inside the dialog. Supports strings or any React node. |
+| `description` | `ReactNode` | No | — | Optional descriptive text below the title. Supports strings or any React node. |
+| `onConfirm` | `(close: () => void) => void` | No | — | Callback fired when the confirm button is clicked. Receives a `close` function to dismiss the dialog. |
+| `onCancel` | `(close: () => void) => void` | No | — | Callback fired when the cancel button is clicked. Also receives a `close` function. |
+| `onDialogClose`| `() => void` | No | — | Callback fired just after the dialog's closing animation completes and it unmounts. |
+| `confirmButton`| `ButtonProps` | No | `{ title: "Confirm" }` | Props passed to the confirm `<Button>` component. |
+| `cancelButton` | `ButtonProps` | No | `{ title: "Cancel", variant: "danger" }` | Props passed to the cancel `<Button>` component. |
 
 ---
 
 ## Behavior & Accessibility
 
-- When opened:
-  - The dialog renders into a fixed fullscreen overlay with semi-transparent blurred backdrop.
-  - Page scrolling is disabled (`document.body.style.overflow = "hidden"`).
-- Closing:
-  - Clicking outside the dialog content area closes it.
-  - Pressing Escape key closes it.
-  - After closing animation (~200ms), content unmounts and page scroll restored.
-- Focus management:
-  - Trigger element is keyboard focusable (`tabIndex=0`) if it's a custom React component wrapper.
-- Buttons:
-  - Confirm and Cancel buttons use entchenComponents' `<Button>` allowing full customization of appearance, icons, loading states, etc.
-  - Callbacks receive a helper function to close the dialog programmatically.
+* **Opening**: The `trigger` function is called with an `openDialog` handler. When this handler is invoked, the dialog mounts and animates into view. Page scrolling is disabled.
+* **Closing**: The dialog can be closed by pressing `Escape`, clicking the backdrop, or programmatically via the `closeDialog` function passed to the `onConfirm` and `onCancel` callbacks. Upon closing, the exit animation plays, and page scroll is restored.
+* **ARIA Roles**: The component correctly wires up ARIA attributes to ensure the title and description are announced by assistive technologies.
 
 ---
 
 ## Usage Example
 
-To avoid markdown rendering issues inside code blocks, here is an example usage snippet wrapped carefully:
-```jsx
-import { Dialog } from "entchenComponents";
-import { Button } from "entchenComponents";
+This example demonstrates how to use a standard `Button` as the trigger via the render prop pattern.
 
-function Example() {
+```jsx
+import { Dialog, Button } from "entchen-components";
+
+function DeletePostExample() {
+  const handleDelete = (closeDialog) => {
+    console.log("Post deleted!");
+    // Perform async delete operation...
+    closeDialog();
+  };
+
   return (
     <Dialog
-      trigger="Open Dialog"
-      title="Delete Confirmation"
-      description="Are you sure you want to delete this item? This action cannot be undone."
-      onConfirm={(close) => {
-        // perform delete operation here...
-        close();
-      }}
-      onCancel={(close) => {
-        // optionally handle cancellation logic...
-        close();
-      }}
-      confirmButton={{ title: "Delete", variant: "danger" }}
-      cancelButton={{ title: "Cancel", variant: "secondary" }}
+      trigger={(open) => (
+        <Button
+          title="Delete Post"
+          variant="danger"
+          onClick={open}
+        />
+      )}
+      title="Confirm Deletion"
+      description="Are you sure you want to delete this post? This action cannot be undone."
+      onConfirm={handleDelete}
+      confirmButton={{ title: "Yes, Delete", variant: "danger" }}
+      cancelButton={{ title: "No, Keep It", variant: "secondary" }}
     />
   );
 }
@@ -84,9 +79,10 @@ function Example() {
 
 ---
 
-## Styling Notes
+## Styling Details
 
-- Uses CSS variables for colors (`--entchen-primary`, `--entchen-text`) ensuring theme consistency across entchenComponents.
-- Backdrop applies blur effect combined with semi-transparent black overlay for visual separation from background content.
-- Dialog panel animates opacity and scale smoothly during mount/unmount using CSS transitions (~200ms duration).
-- Buttons inherit styles from entchenComponents' Button allowing consistent look & feel.
+* The component is styled using **styled-components**.
+* **Overlay**: A fixed-position backdrop covers the screen, animating its `background-color`, `opacity`, and `backdrop-filter` to create a blurred, semi-transparent effect.
+* **Content Panel**: The dialog content itself animates in with a fade (`opacity`) and scale (`transform: scale()`) effect for a smooth entrance. It uses CSS variables like `--entchen-primary` for its background, ensuring theme consistency.
+* **Animations**: All transitions are timed to `200ms` for a quick and responsive feel.
+* **Buttons**: The action buttons are instances of the `Button` component, inheriting all its variants and styling capabilities.

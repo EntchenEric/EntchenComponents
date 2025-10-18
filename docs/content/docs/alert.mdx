@@ -7,66 +7,73 @@ description: A flexible alert component for displaying important messages with v
 
 The `Alert` component is used to display contextual feedback messages such as warnings, errors, success confirmations, or general information. It supports multiple visual variants, an optional icon, and flexible content including a title and description.
 
+
+
 ---
 
 ## Variants
 
-The alert supports four variants that change the background color, border, and text color to convey different message types:
+The alert supports four variants that change its appearance to convey different message types. Each variant applies a distinct set of colors for the background, border, and text.
 
-| Variant   | Description                      |
-|-----------|----------------------------------|
-| `default` | Neutral/info style (uses CSS variables for colors) |
-| `danger`  | Error or critical alerts (red tones)                 |
-| `warning` | Cautionary alerts (yellow tones)                      |
-| `success` | Positive confirmation alerts (green tones)           |
+| Variant | Description |
+| :--- | :--- |
+| `default` | A neutral style for general information, using theme-based CSS variables. |
+| `danger` | An attention-grabbing style for errors or critical alerts, using red tones. 🔴 |
+| `warning` | A cautionary style for potential issues, using yellow tones. 🟡 |
+| `success` | A positive style for confirmation messages, using green tones. 🟢 |
 
 ---
 
 ## Props
 
-| Prop        | Type                   | Required | Description                                                                                         |
-|-------------|------------------------|----------|-----------------------------------------------------------------------------------------------------|
-| `variant`   | `"default" \| "danger" \| "warning" \| "success"` | No       | Visual style variant of the alert. Defaults to `"default"`.                                        |
-| `title`     | `string \| React.FC`   | Yes      | The main headline text or component displayed prominently in the alert.                            |
-| `description` | `string \| React.FC`  | No       | Additional descriptive text or component shown below the title for more context.                   |
-| `icon`      | `React.FC`             | No       | Optional icon component displayed on the left side of the alert content.                           |
+| Prop | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `variant` | `"default" \| "danger" \| "warning" \| "success"` | No | The visual style of the alert. Defaults to `"default"`. |
+| `title` | `ReactNode` | Yes | The main headline for the alert. Can be a string or any valid React node. |
+| `description` | `ReactNode` | No | Additional text shown below the title for more context. Can also be a React node. |
+| `icon` | `React.FC` | No | An optional icon component to display on the left side of the alert. |
 
 ---
 
 ## Accessibility
 
-- The container has `role="alert"` which notifies assistive technologies of important messages.
-- Uses ARIA attributes:
-  - `aria-live="polite"` to announce changes politely without interrupting.
-  - `aria-atomic="true"` to ensure whole alert content is presented at once.
+The component is designed with accessibility in mind to ensure important messages are conveyed to all users.
+
+* The container has a `role="alert"`, which programmatically identifies it as an important, time-sensitive message.
+* It uses `aria-live="polite"` to instruct screen readers to announce the message without interrupting the user's current task.
+* `aria-atomic="true"` ensures that the entire alert message is read out at once, preserving its context.
 
 ---
 
 ## Usage Example
 
+Here’s how you can implement the `Alert` component in your application.
+
 ```jsx
-import { Alert } from "entchenComponents";
-import { WarningIcon } from "your-icon-library";
+import { Alert } from "entchen-components";
+import { WarningIcon, CheckCircleIcon, InfoIcon } from "your-icon-library";
 
 function Example() {
   return (
     <>
       <Alert
         variant="danger"
-        title="Error occurred"
+        title="Error Occurred"
         description="There was a problem processing your request."
         icon={WarningIcon}
       />
 
       <Alert
         variant="success"
-        title={() => <strong>Success!</strong>}
+        title={<strong>Success!</strong>}
         description="Your data has been saved successfully."
+        icon={CheckCircleIcon}
       />
-
+      
       <Alert
         title="Information"
         description="This is a neutral informational message."
+        icon={InfoIcon}
       />
     </>
   );
@@ -77,9 +84,11 @@ function Example() {
 
 ## Styling Details
 
-- Base styles include rounded corners, padding, flex layout with space between icon and text, and subtle shadow.
-- Variant-specific Tailwind classes apply background color, border color, and text color except for default which uses CSS variables:
-  - Default uses custom properties like `--entchen-primary`, ensuring theme consistency.
-- Text styles:
-  - Title uses bold font weight with tight line height.
-  - Description uses smaller font size with reduced opacity and secondary text color variable (`--entchen-text-secondary`) for subtlety.
+The `Alert` component is built with **styled-components**, providing a scoped and maintainable styling solution.
+
+* **Layout**: The main container uses a flexbox layout (`display: flex`) to align the icon and text content. It includes padding, rounded corners (`border-radius: 0.5rem`), and a subtle box shadow.
+* **Variants**: Styling for `danger`, `warning`, and `success` variants is handled by a helper function that applies specific `background-color`, `border`, and `color` properties. The `default` variant uses CSS variables (`--entchen-primary`, `--entchen-text`, etc.) for better theme integration.
+* **Icon**: The icon is wrapped in a `<div>` that prevents it from shrinking (`flex-shrink: 0`) and aligns it cleanly with the text.
+* **Text**:
+    * The **title** has a semi-bold font weight (`font-weight: 600`).
+    * The **description** has a smaller font size and is styled with a secondary text color (`--entchen-text-secondary`) and reduced opacity for visual distinction.
